@@ -2,16 +2,22 @@ from words import words
 from tkinter import *
 import random
 
-
-
+def countdown(count):
+    # change text in label
+    label['text'] = count
+    if count > 0:
+        # call countdown again after 1000ms (1s)
+        window.after(1000, countdown, count-1)
 
 def get_content():
-    # Get the content of Entry Widget
-    if words[0] == typed_word.get().strip():
+    word_to_check = typed_word.get().strip()
+    if words[0] == word_to_check:
         words.remove(words[0])
+        correct_list.append(word_to_check)
         print("ok")
     typed_word.delete(0, END)
 
+correct_list = []
 
 window = Tk()
 window.title("Typing Speed Test")
@@ -28,12 +34,14 @@ typed_word.pack()
 for word in words:
     word_list.insert(END, word + ' ')
 
-button = Button(window, command=get_content)
+label = Label(window)
+label.pack()
+
+# call countdown first time
+countdown(60)
+
 window.bind('<space>', lambda event: get_content())
-while True:
-    if words[0] == typed_word.get():
-        print("ok")
 
-    window.mainloop()
+window.mainloop()
 
-
+print(correct_list)
