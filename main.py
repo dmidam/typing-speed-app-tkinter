@@ -15,24 +15,33 @@ def countdown(count):
     if count > 0:
         # call countdown again after 1000ms (1s)
         window.after(1000, countdown, count - 1)
+    else:
+        count = 0
+        for element in correct_list:
+            count += len(element)
+        word_list.delete("1.0", "end")
+        word_list.insert(END, f"Words per min(WPM): {len(correct_list)}\n"
+                              f"Characters per min(CPM): {count}\n"
+                              f"You typed {len(wrong_list)} words incorrectly.")
 
 
 def get_content():
     index_two = len(words[0])
     word_to_check = typed_word.get().strip()
-    print(words[0])
     if words[0] == word_to_check:
         words.remove(words[0])
         correct_list.append(word_to_check)
-        print("ok")
     else:
         words.remove(words[0])
+        wrong_list.append(word_to_check)
+
     word_list.delete('1.0', f'1.{index_two + 1}')
     typed_word.delete(0, END)
     add_highlight()
 
 
 correct_list = []
+wrong_list = []
 
 window = Tk()
 window.title("Typing Speed Test")
@@ -53,10 +62,9 @@ label = Label(window)
 label.pack()
 
 # call countdown first time
-countdown(60)
+countdown(10)
 add_highlight()
 window.bind('<space>', lambda event: get_content())
 
-window.mainloop()
 
-print(correct_list)
+window.mainloop()
