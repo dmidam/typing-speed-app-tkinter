@@ -18,6 +18,7 @@ def countdown(count):
 
 
 def get_content():
+    index_two = len(words[0])
     word_to_check = typed_word.get().strip()
     print(words[0])
     if words[0] == word_to_check:
@@ -26,8 +27,9 @@ def get_content():
         print("ok")
     else:
         words.remove(words[0])
-
+    word_list.delete('1.0', f'1.{index_two + 1}')
     typed_word.delete(0, END)
+    add_highlight()
 
 
 correct_list = []
