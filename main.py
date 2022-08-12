@@ -3,10 +3,15 @@ from tkinter import *
 import random
 
 
+
+
 def get_content():
     # Get the content of Entry Widget
-    print(typed_word.get())
-    
+    if words[0] == typed_word.get().strip():
+        words.remove(words[0])
+        print("ok")
+    typed_word.delete(0, END)
+
 
 window = Tk()
 window.title("Typing Speed Test")
@@ -22,7 +27,13 @@ typed_word.pack()
 
 for word in words:
     word_list.insert(END, word + ' ')
-get_content()
-window.bind('<space>', get_content)
 
-window.mainloop()
+button = Button(window, command=get_content)
+window.bind('<space>', lambda event: get_content())
+while True:
+    if words[0] == typed_word.get():
+        print("ok")
+
+    window.mainloop()
+
+
