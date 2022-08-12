@@ -2,20 +2,33 @@ from words import words
 from tkinter import *
 import random
 
+
+def add_highlight():
+    index_two = len(words[0])
+    word_list.tag_add("start", "1.0", f"1.{index_two}")
+    word_list.tag_config("start", background="green", foreground="white")
+
+
 def countdown(count):
     # change text in label
     label['text'] = count
     if count > 0:
         # call countdown again after 1000ms (1s)
-        window.after(1000, countdown, count-1)
+        window.after(1000, countdown, count - 1)
+
 
 def get_content():
     word_to_check = typed_word.get().strip()
+    print(words[0])
     if words[0] == word_to_check:
         words.remove(words[0])
         correct_list.append(word_to_check)
         print("ok")
+    else:
+        words.remove(words[0])
+
     typed_word.delete(0, END)
+
 
 correct_list = []
 
@@ -39,7 +52,7 @@ label.pack()
 
 # call countdown first time
 countdown(60)
-
+add_highlight()
 window.bind('<space>', lambda event: get_content())
 
 window.mainloop()
