@@ -3,28 +3,34 @@ from tkinter import *
 import random
 
 
+# create function to highlight word to type
+
 def add_highlight():
     index_two = len(words[0])
     word_list.tag_add("start", "1.0", f"1.{index_two}")
     word_list.tag_config("start", background="green", foreground="white")
 
 
+# create counter
 def countdown(count):
     # change text in label
-    label['text'] = count
+    timer['text'] = count
     if count > 0:
         # call countdown again after 1000ms (1s)
-        window.after(1000, countdown, count - 1)
+        root.after(1000, countdown, count - 1)
     else:
-        count = 0
+        length = 0
         for element in correct_list:
-            count += len(element)
+            length += len(element)
         word_list.delete("1.0", "end")
         word_list.insert(END, f"Words per min(WPM): {len(correct_list)}\n"
-                              f"Characters per min(CPM): {count}\n"
+                              f"Characters per min(CPM): {length}\n"
                               f"You typed {len(wrong_list)} words incorrectly.")
+        word_list.config(state=DISABLED)
+        typed_word.pack_forget()
 
 
+# function to check if user typed word correctly
 def get_content():
     index_two = len(words[0])
     word_to_check = typed_word.get().strip()
@@ -40,31 +46,47 @@ def get_content():
     add_highlight()
 
 
+# function to call counter
+def start_counting():
+    countdown(60)
+    start_info.destroy()
+
+
+# lists to fill with correctly and incorrectly typed words
 correct_list = []
 wrong_list = []
 
-window = Tk()
-window.title("Typing Speed Test")
-window.minsize(width=300, height=50)
-window.config(padx=20, pady=20)
 
-word_list = Text(window, font=42, wrap=WORD, width=50, height=4, padx=20, pady=20)
+root = Tk()
+root.title("Typing Speed Test")
+root.minsize(width=300, height=50)
+root.config(padx=20, pady=20)
+
+# import list of words, put it in textbox and shuffle
+word_list = Text(root, font=42, wrap=WORD, width=50, height=4, padx=20, pady=20)
 random.shuffle(words)
 word_list.pack()
-
-typed_word = Entry(window, font=42)
-typed_word.pack()
-
 for word in words:
     word_list.insert(END, word + ' ')
 
-label = Label(window)
-label.pack()
+# create entry box
+typed_word = Entry(root, font=42)
+typed_word.pack()
+typed_word.focus()
 
-# call countdown first time
-countdown(10)
+# create label for timer
+timer = Label(root)
+timer.pack()
+
+# create info label
+start_info = Label(root, text="Press left CTRL to start", font=42)
+start_info.pack()
+
+# call function highlight
 add_highlight()
-window.bind('<space>', lambda event: get_content())
 
+# bind keys for start new word in entry and start countdown
+root.bind('<space>', lambda event: get_content())
+typed_word.bind("<Control_L>", lambda event: start_counting())
 
-window.mainloop()
+root.mainloop()
