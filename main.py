@@ -4,7 +4,6 @@ import random
 
 
 # create function to highlight word to type
-
 def add_highlight():
     index_two = len(words[0])
     word_list.tag_add("start", "1.0", f"1.{index_two}")
